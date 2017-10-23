@@ -4,6 +4,9 @@
     <% @users.each do |user| %>
         <%= link_to("/users/#{user.id}") do %>
             <div class="users-index-item">
+              <div class="user-left">
+                <img src="<%= "/user_images/#{user.image_name}" %>">
+              </div>
               <div class="user-right">
                 <%= user.name %>
               </div>

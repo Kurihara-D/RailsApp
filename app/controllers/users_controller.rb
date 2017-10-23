@@ -1,4 +1,9 @@
 class UsersController < ApplicationController
+  
+  before_action :authenticate_user, { only: [:index, :show, :edit, :update] }
+  before_action :forbid_login_user, { only: [:new, :create, :login_form, :login] }
+  before_action :ensure_correct_user, { only: [:edit, :update] }
+  
   def index
     @users = User.all
   end
@@ -12,9 +17,15 @@ class UsersController < ApplicationController
   end
   
   def create
-    @user = User.new(name: params[:name], email: params[:email])
+    @user = User.new(
+        name: params[:name],
+        email: params[:email],
+        password: params[:password],
+        image_name: 'default.png'
+    )
     if @user.save
-      flash[:notice] = 'SignUp Success!'
+      flash[:notice] = '登録完了'
+      session[:user_id] = @user.id
       redirect_to("/users/#{@user.id}")
     else
       render('users/new')
@@ -29,11 +40,54 @@ class UsersController < ApplicationController
     @user = User.find_by(id: params[:id])
     @user.name = params[:name]
     @user.email = params[:email]
+    if params[:image]
+      @user.image_name = "#{@user.id}.jpg"
+      image = params[:image]
+      File.binwrite("public/user_images/#{@user.image_name}", image.read)
+    end
     if @user.save
-      flash[:notice] = 'Update Success!'
+      flash[:notice] = '投稿内容を編集しました'
       redirect_to("/users/#{@user.id}")
     else
       render('users/edit')
+    end
+  end
+  
+  def destroy
+    @user = User.find_by(id: params[:id])
+    @user.destroy
+    flash[:notice] = 'アカウントを削除しました'
+    redirect_to('/users/index')
+  end
+  
+  def login_form
+  
+  end
+  
+  def login
+    @user = User.find_by(email: params[:email], password: params[:password])
+    if @user
+      session[:user_id] = @user.id
+      flash[:notice] = 'ログインしました'
+      redirect_to('/posts/index')
+    else
+      @error_message = 'メールアドレスまたはパスワードに誤りがあります'
+      @email = params[:email]
+      @password = params[:password]
+      render('users/login_form')
+    end
+  end
+  
+  def logout
+    flash[:notice] = 'ログアウトしました'
+    session[:user_id] = nil
+    redirect_to('/login')
+  end
+  
+  def ensure_correct_user
+    if @current_user.id != params[:id].to_i
+      flash[:notice] = '権限がありません'
+      redirect_to('/posts/index')
     end
   end
 end
