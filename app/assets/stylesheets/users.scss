@@ -1,3 +1,15 @@
+@mixin pc($width: 769px) {
+  @media screen and (min-width: $width) {
+    @content;
+  }
+}
+
+@mixin smartphone($width: 768px) {
+  @media screen and (max-width: $width) {
+    @content;
+  }
+}
+
 /* users/index ================================ */
 .users-heading {
   font-weight: 300;
