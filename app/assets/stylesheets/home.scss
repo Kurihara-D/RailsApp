@@ -213,13 +213,12 @@ header {
   position: absolute;
   top: 64px;
   z-index: 10;
-  width: 100%;
+  width: 50%;
   border-radius: 0 0 2px 2px;
   font-size: 14px;
 }
 
 .hum_icon {
-  position: fixed;
   top: 10px;
   right: 10px;
   font-size: 30px;
@@ -232,6 +231,7 @@ header {
   text-align: center;
   line-height: 45px;
   outline: none;
+  position: absolute;
 }
 
 .hum_menu {
@@ -239,7 +239,7 @@ header {
   position: fixed;
   top: -200px;
   right: 10px;
-  background-color: #3ecdc6;
+  background-color: rgba(108, 110, 109, 0.4);
 }
 
 .hum_menu a {
@@ -250,7 +250,7 @@ header {
 .hum_menu li {
   text-decoration: none;
   list-style: none;
-  background-color: #3ecdc6;
+  background-color: rgba(108, 110, 109, 0.4);
   height: 40px;
   text-align: center;
   padding: 0 10px 0 10px;
